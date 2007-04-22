@@ -1,23 +1,20 @@
-%define name       axis
-%define version    1.2.1
-%define archivever 1_2_1
-%define release    %mkrel 2.2.2
-%define section    free
-%define gcj_support 1
+%define section         free
+%define gcj_support     1
+%define archivever      1_4
 
-Name:          %{name}
-Version:       %{version}
-Release:       %{release}
+Name:          axis
+Version:       1.4
+Release:       %mkrel 1
 Epoch:         0
 Summary:       A SOAP implementation in Java
 License:       Apache License
 Group:         Development/Java
 Url:           http://ws.apache.org/%{name}/
-Source0:       %{name}-src-%{archivever}-RHCLEAN.tar.bz2
-Patch1:        %{name}-bz152255.patch
+Source0:       %{name}-src-%{archivever}.tar.gz
+Patch0:        %{name}-bz152255.patch
+Patch1:        %{name}-build.patch
 Patch2:        %{name}-imageio.patch
 Patch3:        %{name}-objectweb.patch
-Patch4:        %{name}-%{version}-DH.patch
 BuildRequires: jpackage-utils >= 0:1.5
 BuildRequires: java-devel
 BuildRequires: ant >= 0:1.6
@@ -56,7 +53,8 @@ Requires(post): java-gcj-compat
 Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
-Buildarch:      noarch
+BuildArch:      noarch
+BuildRequires:  java-devel
 %endif
 BuildRoot:     %{_tmppath}/%{name}-%{version}-buildroot
 
@@ -90,27 +88,22 @@ Group:          Development/Java
 Documentation for %{name}.
 
 %prep
-rm -rf $RPM_BUILD_ROOT
 %setup -q -n %{name}-%{archivever}
-%patch1 -p1 -b .orig
-%patch2 -p1 -b .orig
-%patch3 -p1 -b .orig
-%patch4
+%patch0 -p1
+%patch1 -p0
+%patch2 -p1
+%patch3 -p1
+%{__rm} -r docs/apiDocs
 
 # Remove provided binaries
-find . -name "*.jar" -exec rm -f {} \;
-find . -name "*.zip" -exec rm -f {} \;
-find . -name "*.class" -exec rm -f {} \;
+%{_bindir}/find . -name "*.jar" | %{_bindir}/xargs -t %{__rm}
+%{_bindir}/find . -name "*.class" | %{_bindir}/xargs -t %{__rm}
 
 %build
-
-[ -z "$JAVA_HOME" ] && export JAVA_HOME=%{_jvmdir}/java
-
 CLASSPATH=$(build-classpath wsdl4j jakarta-commons-discovery jakarta-commons-httpclient jakarta-commons-logging log4j jaf javamail/mailapi servletapi5)
 export CLASSPATH=$CLASSPATH:$(build-classpath oro junit jimi xml-security jsse httpunit jms castor 2>/dev/null)
-
 export OPT_JAR_LIST="ant/ant-nodeps"
-%ant -Dcompile.ime=true \
+%{ant} -Dcompile.ime=true -Dnowarn=true \
     -Dwsdl4j.jar=$(build-classpath wsdl4j) \
     -Dcommons-discovery.jar=$(build-classpath jakarta-commons-discovery) \
     -Dcommons-logging.jar=$(build-classpath jakarta-commons-logging) \
@@ -127,43 +120,33 @@ export OPT_JAR_LIST="ant/ant-nodeps"
     clean compile javadocs
 
 %install
+%{__rm} -rf %{buildroot}
 
-### Jar files
+%{__mkdir_p} %{buildroot}%{_javadir}/%{name}
 
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
+for jar in axis axis-ant saaj jaxrpc; do
+   %{__cp} -a build/lib/${jar}.jar %{buildroot}%{_javadir}/%{name}/${jar}-%{version}.jar
+done
+(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do %{__ln_s} ${jar} `echo $jar | %{__sed} "s|-%{version}||g"`; done)
 
-pushd build/lib
-   install -m 644 axis.jar axis-ant.jar saaj.jar jaxrpc.jar \
-           $RPM_BUILD_ROOT%{_javadir}/%{name}
-popd
-
-pushd $RPM_BUILD_ROOT%{_javadir}/%{name}
-   for jar in *.jar ; do
-      vjar=$(echo $jar | sed s+.jar+-%{version}.jar+g)
-      mv $jar $vjar
-      ln -fs $vjar $jar
-   done
-popd
-
-### Javadoc
-
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+%{__mkdir_p} %{buildroot}%{_javadocdir}/%{name}-%{version}
+%{__cp} -a build/javadocs/* %{buildroot}%{_javadocdir}/%{name}-%{version}
+(cd %{buildroot}%{_javadocdir} && %{__ln_s} %{name}-%{version} %{name})
 
 pushd docs
-   rm -fr apiDocs
-   ln -fs %{_javadocdir}/%{name} apiDocs
+   %{__rm} -f apiDocs
+   %{__ln_s} %{_javadocdir}/%{name} apiDocs
 popd
 
-%{__perl} -pi -e 's/\r$//g' LICENSE README release-notes.html changelog.html
-find docs -type f -name "*.html" -o -name "*.dbk" -o -name "*.bib" -o -name "*.css" | xargs %{__perl} -pi -e 's/\r$//g'
+%{__perl} -pi -e 's/\r$//g' LICENSE README release-notes.html changelog.html docs/svnlog.txt
+%{_bindir}/find docs -type f -name "*.html" -o -name "*.dbk" -o -name "*.bib" -o -name "*.css" | %{_bindir}/xargs -t %{__perl} -pi -e 's/\r$//g'
 
 %if %{gcj_support}
 %{_bindir}/aot-compile-rpm
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
 
 %if %{gcj_support}
 %post
@@ -172,15 +155,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 %{clean_gcjdb}
 %endif
-
-%post javadoc
-rm -f %{_javadocdir}/%{name}
-ln -s %{name}-%{version} %{_javadocdir}/%{name}
-
-%postun javadoc
-if [ "$1" = "0" ]; then
-    rm -f %{_javadocdir}/%{name}
-fi
 
 %files
 %defattr(0644,root,root,0755)
@@ -194,6 +168,7 @@ fi
 
 %files javadoc
 %defattr(0644,root,root,0755)
+%dir %{_javadocdir}/%{name}
 %dir %{_javadocdir}/%{name}-%{version}
 %{_javadocdir}/%{name}-%{version}/*
 
