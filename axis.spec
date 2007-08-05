@@ -4,7 +4,7 @@
 
 Name:          axis
 Version:       1.4
-Release:       %mkrel 1
+Release:       %mkrel 2.0.1
 Epoch:         0
 Summary:       A SOAP implementation in Java
 License:       Apache License
@@ -22,7 +22,7 @@ BuildRequires: ant-nodeps
 # Mandatory requires
 BuildRequires: jaf
 BuildRequires: jakarta-commons-discovery
-BuildRequires: jakarta-commons-httpclient
+BuildRequires: jakarta-commons-httpclient >= 3.0
 BuildRequires: jakarta-commons-logging
 BuildRequires: javamail
 BuildRequires: jaxp_parser_impl
