@@ -117,7 +117,15 @@ export OPT_JAR_LIST="ant/ant-nodeps"
     -Djunit.jar=$(build-classpath junit 2>/dev/null) \
     -Djimi.jar=$(build-classpath jimi 2>/dev/null) \
     -Djsse.jar=$(build-classpath jsse/jsse 2>/dev/null) \
-    clean compile javadocs
+    clean compile
+
+for file in src/org/apache/axis/enum/Scope.java src/org/apache/axis/enum/Style.java src/org/apache/axis/enum/Use.java; do
+  %{__mv} ${file} ${file}.bak
+done
+%{ant} javadocs
+for file in src/org/apache/axis/enum/Scope.java src/org/apache/axis/enum/Style.java src/org/apache/axis/enum/Use.java; do
+  %{__mv} ${file}.bak ${file}
+done
 
 %install
 %{__rm} -rf %{buildroot}
