@@ -4,7 +4,7 @@
 
 Name:          axis
 Version:       1.4
-Release:       %mkrel 2.0.1
+Release:       %mkrel 2.0.2
 Epoch:         0
 Summary:       A SOAP implementation in Java
 License:       Apache License
@@ -49,8 +49,6 @@ Requires:      log4j
 Requires:      wsdl4j
 
 %if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
 BuildArch:      noarch
