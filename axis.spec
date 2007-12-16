@@ -4,7 +4,7 @@
 
 Name:          axis
 Version:       1.4
-Release:       %mkrel 2.0.2
+Release:       %mkrel 2.0.3
 Epoch:         0
 Summary:       A SOAP implementation in Java
 License:       Apache License
@@ -15,7 +15,7 @@ Patch0:        %{name}-bz152255.patch
 Patch1:        %{name}-build.patch
 Patch2:        %{name}-imageio.patch
 Patch3:        %{name}-objectweb.patch
-BuildRequires: jpackage-utils >= 0:1.5
+BuildRequires: java-rpmbuild >= 0:1.5
 BuildRequires: java-devel
 BuildRequires: ant >= 0:1.6
 BuildRequires: ant-nodeps
