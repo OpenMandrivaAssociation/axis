@@ -54,7 +54,6 @@ BuildRequires:  java-gcj-compat-devel
 BuildArch:      noarch
 BuildRequires:  java-devel
 %endif
-BuildRoot:     %{_tmppath}/%{name}-%{version}-buildroot
 
 %description
 Apache AXIS is an implementation of the SOAP ("Simple Object Access Protocol")
