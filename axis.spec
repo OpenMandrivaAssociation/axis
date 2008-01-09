@@ -20,12 +20,12 @@ BuildRequires: java-devel
 BuildRequires: ant >= 0:1.6
 BuildRequires: ant-nodeps
 # Mandatory requires
-BuildRequires: jaf
+BuildRequires: geronimo-jaf-1.0.2-api
 BuildRequires: jakarta-commons-discovery
 BuildRequires: jakarta-commons-httpclient >= 3.0
 BuildRequires: jakarta-commons-logging
-BuildRequires: javamail
-BuildRequires: jaxp_parser_impl
+BuildRequires: geronimo-javamail
+BuildRequires: xerces-j2
 BuildRequires: log4j
 BuildRequires: servletapi5
 BuildRequires: wsdl4j
@@ -39,12 +39,12 @@ BuildRequires: castor
 
 Requires:      java
 Requires:      jpackage-utils >= 0:1.5
-Requires:      jaf
+Requires:      geronimo-jaf-1.0.2-api
 Requires:      jakarta-commons-discovery
 Requires:      jakarta-commons-logging
 Requires:      jakarta-commons-httpclient
-Requires:      javamail
-Requires:      jaxp_parser_impl
+Requires:      geronimo-javamail
+Requires:      xerces-j2
 Requires:      log4j
 Requires:      wsdl4j
 
