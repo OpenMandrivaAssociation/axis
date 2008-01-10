@@ -4,7 +4,7 @@
 
 Name:          axis
 Version:       1.4
-Release:       %mkrel 2.0.3
+Release:       %mkrel 2.0.4
 Epoch:         0
 Summary:       A SOAP implementation in Java
 License:       Apache License
@@ -22,7 +22,7 @@ BuildRequires: ant-nodeps
 # Mandatory requires
 BuildRequires: geronimo-jaf-1.0.2-api
 BuildRequires: jakarta-commons-discovery
-BuildRequires: jakarta-commons-httpclient >= 3.0
+BuildRequires: jakarta-commons-httpclient >= 0:3.0
 BuildRequires: jakarta-commons-logging
 BuildRequires: geronimo-javamail-1.3.1-api
 BuildRequires: xerces-j2
@@ -98,7 +98,7 @@ Documentation for %{name}.
 %{_bindir}/find . -name "*.class" | %{_bindir}/xargs -t %{__rm}
 
 %build
-CLASSPATH=$(build-classpath wsdl4j jakarta-commons-discovery jakarta-commons-httpclient jakarta-commons-logging log4j jaf javamail/mailapi servletapi5)
+CLASSPATH=$(build-classpath wsdl4j jakarta-commons-discovery jakarta-commons-httpclient jakarta-commons-logging log4j jaf javamail servletapi5)
 export CLASSPATH=$CLASSPATH:$(build-classpath oro junit jimi xml-security jsse httpunit jms castor 2>/dev/null)
 export OPT_JAR_LIST="ant/ant-nodeps"
 %{ant} -Dcompile.ime=true -Dnowarn=true \
@@ -108,7 +108,7 @@ export OPT_JAR_LIST="ant/ant-nodeps"
     -Dcommons-httpclient.jar=$(build-classpath jakarta-commons-httpclient) \
     -Dlog4j-core.jar=$(build-classpath log4j) \
     -Dactivation.jar=$(build-classpath jaf) \
-    -Dmailapi.jar=$(build-classpath javamail/mailapi) \
+    -Dmailapi.jar=$(build-classpath javamail) \
     -Dxerces.jar=$(build-classpath jaxp_parser_impl) \
     -Dservlet.jar=$(build-classpath servletapi5) \
     -Dregexp.jar=$(build-classpath oro 2>/dev/null) \
