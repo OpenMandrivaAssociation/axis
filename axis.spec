@@ -24,7 +24,7 @@ BuildRequires: geronimo-jaf-1.0.2-api
 BuildRequires: jakarta-commons-discovery
 BuildRequires: jakarta-commons-httpclient >= 3.0
 BuildRequires: jakarta-commons-logging
-BuildRequires: geronimo-javamail
+BuildRequires: geronimo-javamail-1.3.1-api
 BuildRequires: xerces-j2
 BuildRequires: log4j
 BuildRequires: servletapi5
@@ -43,7 +43,7 @@ Requires:      geronimo-jaf-1.0.2-api
 Requires:      jakarta-commons-discovery
 Requires:      jakarta-commons-logging
 Requires:      jakarta-commons-httpclient
-Requires:      geronimo-javamail
+Requires:      geronimo-javamail-1.3.1-api
 Requires:      xerces-j2
 Requires:      log4j
 Requires:      wsdl4j
