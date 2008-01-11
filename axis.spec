@@ -15,6 +15,7 @@ Patch0:        %{name}-bz152255.patch
 Patch1:        %{name}-build.patch
 Patch2:        %{name}-imageio.patch
 Patch3:        %{name}-objectweb.patch
+Patch4:        %{name}-1.4-no-clear-cache.patch
 BuildRequires: java-rpmbuild >= 0:1.5
 BuildRequires: java-devel
 BuildRequires: ant >= 0:1.6
@@ -91,6 +92,7 @@ Documentation for %{name}.
 %patch1 -p0
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 %{__rm} -r docs/apiDocs
 
 # Remove provided binaries
