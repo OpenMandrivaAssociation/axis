@@ -4,9 +4,9 @@
 
 Name:          axis
 Version:       1.4
-Release:       %mkrel 2.0.4
+Release:       %mkrel 2.0.5
 Epoch:         0
-Summary:       A SOAP implementation in Java
+Summary:       SOAP implementation in Java
 License:       Apache License
 Group:         Development/Java
 Url:           http://ws.apache.org/%{name}/
