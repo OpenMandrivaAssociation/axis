@@ -1,0 +1,25 @@
+--- axis-1_4/src/org/apache/axis/components/image/MerlinIO.java.orig	2006-04-23 03:57:27.000000000 +0200
++++ axis-1_4/src/org/apache/axis/components/image/MerlinIO.java	2007-04-22 13:12:12.000000000 +0200
+@@ -42,12 +42,6 @@
+      */
+     public void saveImage(String mimeType, Image image, OutputStream os)
+             throws Exception {
+-        ImageWriter writer = null;
+-        Iterator iter = javax.imageio.ImageIO.getImageWritersByMIMEType(mimeType);
+-        if (iter.hasNext()) {
+-            writer = (ImageWriter) iter.next();
+-        }
+-        writer.setOutput(javax.imageio.ImageIO.createImageOutputStream(os));
+         BufferedImage rendImage = null;
+         if (image instanceof BufferedImage) {
+             rendImage = (BufferedImage) image;
+@@ -59,8 +53,7 @@
+             Graphics g = rendImage.createGraphics();
+             g.drawImage(image, 0, 0, null);
+         }
+-        writer.write(new IIOImage(rendImage, null, null));
+-        writer.dispose();
++        javax.imageio.ImageIO.write(rendImage, mimeType, os);
+     }
+ 
+     /**
