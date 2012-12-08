@@ -1,9 +1,11 @@
 %define section         free
+%define gcj_support     1
 %define archivever      1_4
 
 Name:          axis
 Version:       1.4
-Release:       5
+Release:       4
+Epoch:         0
 Summary:       SOAP implementation in Java
 License:       Apache License
 Group:         Development/Java
@@ -15,49 +17,44 @@ Patch2:        %{name}-imageio.patch
 Patch3:        %{name}-objectweb.patch
 Patch4:        %{name}-1.4-no-clear-cache.patch
 BuildRequires: java-rpmbuild >= 0:1.5
-# Build only
-Patch5:        %{name}-java16.patch
-BuildRequires: jpackage-utils >= 0:1.6
-BuildRequires: java-devel >= 0:1.6.0
+BuildRequires: java-devel
 BuildRequires: ant >= 0:1.6
 BuildRequires: ant-nodeps
-BuildRequires: ant-junit
-BuildRequires: httpunit
-BuildRequires: junit
-BuildRequires: xmlunit
-# Main requires
-BuildRequires: bea-stax-api
-BuildRequires: bsf
-BuildRequires: castor
-BuildRequires: javamail
-BuildRequires: tomcat6-servlet-2.5-api
-BuildRequires: apache-commons-discovery
+# Mandatory requires
+BuildRequires: geronimo-jaf-1.0.2-api
+BuildRequires: jakarta-commons-discovery
 BuildRequires: jakarta-commons-httpclient >= 0:3.0
-BuildRequires: apache-commons-logging
-BuildRequires: apache-commons-net
-BuildRequires: jakarta-oro
-BuildRequires: regexp
-BuildRequires: log4j
-BuildRequires: wsdl4j
-BuildRequires: xalan-j2
+BuildRequires: jakarta-commons-logging
+BuildRequires: geronimo-javamail-1.3.1-api
 BuildRequires: xerces-j2
-BuildRequires: xml-commons-apis12
-#BuildRequires: xmlbeans
-#BuildRequires: xml-security
+BuildRequires: log4j
+BuildRequires: servletapi5
+BuildRequires: wsdl4j
 # optional requires
-#BuildRequires: jimi
-BuildRequires: jetty
-Requires:      java >= 0:1.4.2
-Requires:      jpackage-utils >= 0:1.6
-Requires:      apache-commons-discovery
-Requires:      apache-commons-logging
-Requires:      jakarta-commons-httpclient >= 0:3.0
-Requires:      javamail
+BuildRequires: jsse
+BuildRequires: junit
+BuildRequires: oro
+#BuildRequires: jms
+BuildRequires: castor
+#BuildRequires: xml-security
+
+Requires:      java
+Requires:      jpackage-utils >= 0:1.5
+Requires:      geronimo-jaf-1.0.2-api
+Requires:      jakarta-commons-discovery
+Requires:      jakarta-commons-logging
+Requires:      jakarta-commons-httpclient
+Requires:      geronimo-javamail-1.3.1-api
+Requires:      xerces-j2
 Requires:      log4j
 Requires:      wsdl4j
+
+%if %{gcj_support}
+BuildRequires:  java-gcj-compat-devel
+%else
 BuildArch:      noarch
-Obsoletes:      %{name}14
-Provides:       %{name}14 = %version-%release
+BuildRequires:  java-devel
+%endif
 
 %description
 Apache AXIS is an implementation of the SOAP ("Simple Object Access Protocol")
@@ -77,8 +74,6 @@ This project is a follow-on to the Apache SOAP project.
 %package javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Java
-Obsoletes:      %{name}14-javadoc
-Provides:       %{name}14-javadoc = %version-%release
 
 %description javadoc
 Javadoc for %{name}.
@@ -86,109 +81,208 @@ Javadoc for %{name}.
 %package manual
 Summary:        Manual for %{name}
 Group:          Development/Java
-Obsoletes:      %{name}14-manual
-Provides:       %{name}14-manual = %version-%release
 
 %description manual
 Documentation for %{name}.
 
-#--------------------------------------------------------------------
-
 %prep
-%setup -q -n %{name}-1_4
-ln -s %{_javadocdir}/%{name} docs/apiDocs
+%setup -q -n %{name}-%{archivever}
+%patch0 -p1
+%patch1 -p0
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%__rm -r docs/apiDocs
 
 # Remove provided binaries
-#find . -name "*.jar" -exec rm -f {} \;
-for f in $(find . -name "*.jar"); do mv $f $f.no; done
-#find . -name "*.zip" -exec rm -f {} \;
-for f in $(find . -name "*.zip"); do mv $f $f.no; done
-#find . -name "*.class" -exec rm -f {} \;
-for f in $(find . -name "*.class"); do mv $f $f.no; done
-
-%patch5 -p0 -b .orig
+%{_bindir}/find . -name "*.jar" | %{_bindir}/xargs -t %__rm
+%{_bindir}/find . -name "*.class" | %{_bindir}/xargs -t %__rm
 
 %build
-pushd lib
-ln -sf $(build-classpath bea-stax-api) .
-ln -sf $(build-classpath bsf) .
-ln -sf $(build-classpath castor) .
-ln -sf $(build-classpath commons-discovery) .
-ln -sf $(build-classpath commons-httpclient) .
-ln -sf $(build-classpath commons-logging) .
-ln -sf $(build-classpath commons-net) .
-ln -sf $(build-classpath httpunit) .
-ln -sf $(build-classpath jetty/jetty) .
-ln -sf $(build-classpath log4j) .
-ln -sf $(build-classpath oro) .
-#ln -sf $(build-classpath xml-security) .
-#ln -sf $(build-classpath xmlbeans/xbean) .
-ln -sf $(build-classpath wsdl4j) .
-pushd endorsed
-ln -sf $(build-classpath xerces-j2) .
-ln -sf $(build-classpath xml-commons-apis12) .
-popd
-ln -sf $(build-classpath javamail/mail) .
-popd
-
-ant \
-    -Dant.build.javac.source=1.4 \
-    -Dtest.functional.fail=no \
-    -Dcommons-discovery.jar=$(build-classpath commons-discovery) \
-    -Dcommons-httpclient.jar=$(build-classpath commons-httpclient) \
-    -Dcommons-logging.jar=$(build-classpath commons-logging) \
-    -Dlog4j-core.jar=$(build-classpath log4j) \
+CLASSPATH=$(build-classpath wsdl4j jakarta-commons-discovery jakarta-commons-httpclient jakarta-commons-logging log4j jaf javamail servletapi5)
+export CLASSPATH=$CLASSPATH:$(build-classpath oro junit jimi xml-security jsse httpunit jms castor 2>/dev/null)
+export OPT_JAR_LIST="ant/ant-nodeps"
+%{ant} -Dcompile.ime=true -Dnowarn=true \
     -Dwsdl4j.jar=$(build-classpath wsdl4j) \
-    -Dregexp.jar=$(build-classpath regexp) \
-    -Dxmlunit.jar=$(build-classpath xmlunit) \
-    -Dmailapi.jar=$(build-classpath javamail/mail) \
-    -Dservlet.jar=$(build-classpath servlet) \
-    -Dbsf.jar=$(build-classpath bsf) \
-    -Dcastor.jar=$(build-classpath castor) \
-    -Dcommons-net.jar=$(build-classpath commons-net) \
-    -Djetty.jar=$(build-classpath jetty/jetty) \
-    -Dsecurity.jar=$(build-classpath xml-security) \
-    -Dxmlbeans.jar=$(build-classpath xmlbeans) \
-    -Dhttpunit.jar=$(build-classpath httpunit) \
-    -Djunit.jar=$(build-classpath junit) \
-    clean war javadocs junit
+    -Dcommons-discovery.jar=$(build-classpath jakarta-commons-discovery) \
+    -Dcommons-logging.jar=$(build-classpath jakarta-commons-logging) \
+    -Dcommons-httpclient.jar=$(build-classpath jakarta-commons-httpclient) \
+    -Dlog4j-core.jar=$(build-classpath log4j) \
+    -Dactivation.jar=$(build-classpath jaf) \
+    -Dmailapi.jar=$(build-classpath javamail) \
+    -Dxerces.jar=$(build-classpath jaxp_parser_impl) \
+    -Dservlet.jar=$(build-classpath servletapi5) \
+    -Dregexp.jar=$(build-classpath oro 2>/dev/null) \
+    -Djunit.jar=$(build-classpath junit 2>/dev/null) \
+    -Djimi.jar=$(build-classpath jimi 2>/dev/null) \
+    -Djsse.jar=$(build-classpath jsse/jsse 2>/dev/null) \
+    clean compile
 
-#    -Djimi.jar=$(build-classpath jimi) \
+for file in src/org/apache/axis/enum/Scope.java src/org/apache/axis/enum/Style.java src/org/apache/axis/enum/Use.java; do
+  %__mv ${file} ${file}.bak
+done
+%{ant} javadocs
+for file in src/org/apache/axis/enum/Scope.java src/org/apache/axis/enum/Style.java src/org/apache/axis/enum/Use.java; do
+  %__mv ${file}.bak ${file}
+done
 
 %install
-rm -rf $RPM_BUILD_ROOT
+%__mkdir_p %{buildroot}%{_javadir}/%{name}
 
-### Jar files
+for jar in axis axis-ant saaj jaxrpc; do
+   cp -a build/lib/${jar}.jar %{buildroot}%{_javadir}/%{name}/${jar}-%{version}.jar
+done
+(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do %__ln_s ${jar} `echo $jar | %__sed "s|-%{version}||g"`; done)
 
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
+%__mkdir_p %{buildroot}%{_javadocdir}/%{name}-%{version}
+#cp -a build/javadocs/* %{buildroot}%{_javadocdir}/%{name}-%{version}
+(cd %{buildroot}%{_javadocdir} && %{__ln_s} %{name}-%{version} %{name})
 
-pushd build/lib
-# install axis-schema.jar when xmlbeans is available
-   install -m 644 axis.jar axis-ant.jar saaj.jar jaxrpc.jar \
-           $RPM_BUILD_ROOT%{_javadir}/%{name}
+pushd docs
+   %__rm -f apiDocs
+   %__ln_s %{_javadocdir}/%{name} apiDocs
 popd
 
-### Javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+%__perl -pi -e 's/\r$//g' LICENSE README release-notes.html changelog.html docs/svnlog.txt
+%{_bindir}/find docs -type f -name "*.html" -o -name "*.dbk" -o -name "*.bib" -o -name "*.css" | %{_bindir}/xargs -t %{__perl} -pi -e 's/\r$//g'
 
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/webapps
-install -m 644 build/axis.war \
-    $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/webapps
+%if %{gcj_support}
+%{_bindir}/aot-compile-rpm
+%endif
+
+%if %{gcj_support}
+%post
+%{update_gcjdb}
+
+%postun
+%{clean_gcjdb}
+%endif
 
 %files
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc LICENSE README release-notes.html changelog.html
 %dir %{_javadir}/%{name}
 %{_javadir}/%{name}/*.jar
-%{_datadir}/%{name}-%{version}
+%if %{gcj_support}
+%dir %{_libdir}/gcj/%{name}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/*
+%endif
 
 %files javadoc
-%defattr(-,root,root,-)
-%{_javadocdir}/%{name}
+%defattr(0644,root,root,0755)
+%dir %{_javadocdir}/%{name}
+%dir %{_javadocdir}/%{name}-%{version}
+#%{_javadocdir}/%{name}-%{version}/*
 
 %files manual
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc docs/*
 
+
+
+
+%changelog
+* Tue Nov 30 2010 Oden Eriksson <oeriksson@mandriva.com> 0:1.4-2.0.8mdv2011.0
++ Revision: 603487
+- rebuild
+
+* Tue Mar 16 2010 Oden Eriksson <oeriksson@mandriva.com> 0:1.4-2.0.7mdv2010.1
++ Revision: 522128
+- rebuilt for 2010.1
+
+* Sun Aug 09 2009 Oden Eriksson <oeriksson@mandriva.com> 0:1.4-2.0.6mdv2010.0
++ Revision: 413153
+- rebuild
+
+* Tue Apr 07 2009 Funda Wang <fwang@mandriva.org> 0:1.4-2.0.5mdv2009.1
++ Revision: 364685
+- rediff patch0
+
+* Fri Jan 11 2008 David Walluck <walluck@mandriva.org> 0:1.4-2.0.5mdv2008.1
++ Revision: 147861
+- bump release
+- add patch for compilation
+- use monolithic javamail jar
+- fix javamail requires
+- explicitly require geronimo for jaf and javamail
+- requires xerces-j2 instead of jaxp_parser_impl
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+  + Anssi Hannula <anssi@mandriva.org>
+    - buildrequire java-rpmbuild, i.e. build with icedtea on x86(_64)
+
+* Sat Sep 15 2007 Anssi Hannula <anssi@mandriva.org> 0:1.4-2.0.2mdv2008.0
++ Revision: 87216
+- rebuild to filter out autorequires of GCJ AOT objects
+- remove unnecessary Requires(post) on java-gcj-compat
+
+* Sun Aug 05 2007 David Walluck <walluck@mandriva.org> 0:1.4-2.0.1mdv2008.0
++ Revision: 59192
+- fix sinjdoc build
+- sync with JPackage
+
+* Sun Apr 22 2007 David Walluck <walluck@mandriva.org> 0:1.4-1mdv2008.0
++ Revision: 16847
+- 1.4
+
+
+* Thu Mar 15 2007 Christiaan Welvaart <spturtle@mandriva.org> 1.2.1-2.2.2mdv2007.1
++ Revision: 144221
+- rebuild for 2007.1
+
+  + Per Øyvind Karlsen <pkarlsen@mandriva.com>
+    - Import axis
+
+* Sat Jun 03 2006 David Walluck <walluck@mandriva.org> 0:1.2.1-2.2.1mdv2007.0
+- no more jacorb or jonathan-rmi
+- rebuild for libgcj.so.7
+- aot compile
+
+* Sun Sep 11 2005 David Walluck <walluck@mandriva.org> 0:1.2.1-1.1mdk
+- release
+
+* Wed Jun 22 2005 Gary Benson <gbenson@redhat.com> 0:1.2.1-1jpp_1fc
+- Upgrade to 1.2.1-1jpp.
+
+* Sat Jun 18 2005 Fernando Nasser <fnasser@redhat.com> 0:1.2.1-1jpp
+- Upgrade to 1.2.1 maintenance release
+
+* Sat Jun 18 2005 Gary Benson <gbenson@redhat.com> 0:1.2-1jpp_1fc
+- Work around file descripter leak (#160802).
+- Build into Fedora.
+
+* Tue Jun 14 2005 Gary Benson <gbenson@redhat.com>
+- Add ObjectWeb's patch.
+
+* Sat Jun 11 2005 Gary Benson <gbenson@redhat.com>
+- Remove jarfiles from the tarball.
+
+* Wed Jun 08 2005 Gary Benson <gbenson@redhat.com>
+- Add DOM3 stubs to classes that need them (#152255).
+- Avoid some API holes in libgcj's ImageIO implementation.
+- Pick up CORBA and javax.rmi classes from jacorb and jonathan-rmi.
+
+* Thu May 05 2005 Fernando Nasser <fnasser@redhat.com> 0:1.2-1jpp_1rh
+- Merge with upstream for upgrade
+
+* Thu May 05 2005 Fernando Nasser <fnasser@redhat.com> 0:1.2-1jpp
+- Finaly 1.2 final release
+
+* Sat Mar 12 2005 Ralph Apel <r.apel at r-apel.de>  0:1.2-0.rc2.3jpp
+- Also Buildrequire ant-nodeps
+
+* Fri Mar 11 2005 Ralph Apel <r.apel at r-apel.de>  0:1.2-0.rc2.2jpp
+- Set OPT_JAR_LIST to "ant/ant-nodeps"
+- Buildrequire ant >= 1.6
+
+* Mon Feb 28 2005 Fernando Nasser <fnasser@redhat.com> 0:1.2-0.rc2.1jpp
+- Upgrade to 1.2.rc2
+
+* Sat Aug 21 2004 Ralph Apel <r.apel at r-apel.de>  0:1.1-3jpp
+- Build with ant-1.6.2
 
