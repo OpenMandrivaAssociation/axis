@@ -1,12 +1,11 @@
-%define section         free
 %define gcj_support     1
-%define archivever      1_4
+%define archivever      %(echo %version |sed -e 's,\\.,_,g')
 
 Summary:       SOAP implementation in Java
 Name:          axis
 Epoch:         0
 Version:       1.4
-Release:       4
+Release:       5
 License:       Apache License
 Group:         Development/Java
 Url:           http://ws.apache.org/%{name}/
