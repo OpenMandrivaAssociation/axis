@@ -1,0 +1,22 @@
+--- axis-1.4.pom	2012-05-11 10:48:16.838000514 +0200
++++ axis-1.4-work.pom	2012-05-11 10:49:54.480987651 +0200
+@@ -33,9 +33,9 @@
+          <version>1.4</version>
+       </dependency>
+       <dependency><!-- depends on nothing; I think -->
+-         <groupId>axis</groupId>
+-         <artifactId>axis-wsdl4j</artifactId>
+-         <version>1.5.1</version><!-- version independent of axis -->
++         <groupId>wsdl4j</groupId>
++         <artifactId>wsdl4j</artifactId>
++         <version>1.6.2</version><!-- version independent of axis -->
+          <scope>runtime</scope>
+          <!-- note: also at wsdl4j:wsdl4j (a sf.net project) -->
+       </dependency>
+@@ -53,4 +53,4 @@
+       </dependency>
+       <!-- supposedly also depends on log4j 1.2.8 but that is unlikely given commons-logging -->
+    </dependencies>
+-</project>
+\ No newline at end of file
++</project>

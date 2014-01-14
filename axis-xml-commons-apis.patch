@@ -1,0 +1,313 @@
+--- axis-1.4-src/src/org/apache/axis/message/MessageElement.java.orig	2005-08-20 21:49:29.000000000 +0100
++++ axis-1.4-src/src/org/apache/axis/message/MessageElement.java	2013-08-06 18:00:00.585790538 +0100
+@@ -2143,4 +2143,20 @@
+         }
+         return doc;
+     }
++
++    public org.w3c.dom.TypeInfo getSchemaTypeInfo() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setIdAttribute(String name, boolean isId) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
+ }
+--- axis-1.4-src/src/org/apache/axis/message/NodeImpl.java.orig	2005-08-20 21:49:29.000000000 +0100
++++ axis-1.4-src/src/org/apache/axis/message/NodeImpl.java	2013-08-06 16:29:25.304348471 +0100
+@@ -857,4 +857,53 @@
+         }	
+         this._isDirty = false;
+     }
++
++    // Node
++    public String getBaseURI() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public short compareDocumentPosition(Node other) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getTextContent() throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setTextContent(String textContent) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isSameNode(Node other) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupPrefix(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isDefaultNamespace(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupNamespaceURI(String prefix) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isEqualNode(Node arg) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getFeature(String feature, String version) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object setUserData(String key, Object data, org.w3c.dom.UserDataHandler handler) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getUserData(String key) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
+ }
+--- axis-1.4-src/src/org/apache/axis/message/SOAPDocumentImpl.java.orig	2005-05-27 16:34:36.000000000 +0100
++++ axis-1.4-src/src/org/apache/axis/message/SOAPDocumentImpl.java	2013-08-06 16:28:49.488404040 +0100
+@@ -681,4 +681,110 @@
+     public boolean hasAttributes() {
+         throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
+     }
++
++    // Document
++    public String getInputEncoding() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getXmlEncoding() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean getXmlStandalone() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getXmlVersion() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setXmlVersion(String xmlVersion) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean getStrictErrorChecking() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setStrictErrorChecking(boolean strictErrorChecking) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getDocumentURI() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setDocumentURI(String documentURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Node adoptNode(Node source) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public org.w3c.dom.DOMConfiguration getDomConfig() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void normalizeDocument() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    // Node
++    public String getBaseURI() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public short compareDocumentPosition(Node other) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getTextContent() throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setTextContent(String textContent) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isSameNode(Node other) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupPrefix(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isDefaultNamespace(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupNamespaceURI(String prefix) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isEqualNode(Node arg) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getFeature(String feature, String version) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object setUserData(String key, Object data, org.w3c.dom.UserDataHandler handler) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getUserData(String key) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
+ }
+--- axis-1.4-src/src/org/apache/axis/SOAPPart.java.orig	2005-06-07 15:30:09.000000000 +0100
++++ axis-1.4-src/src/org/apache/axis/SOAPPart.java	2013-08-06 16:40:38.837369862 +0100
+@@ -1280,5 +1280,99 @@
+     public boolean isBodyStream() {
+         return (currentForm == SOAPPart.FORM_INPUTSTREAM || currentForm == SOAPPart.FORM_BODYINSTREAM);        
+     }
++
++    // Document
++    public String getInputEncoding() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getXmlEncoding() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean getXmlStandalone() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getXmlVersion() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setXmlVersion(String xmlVersion) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getDocumentURI() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setDocumentURI(String documentURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public org.w3c.dom.DOMConfiguration getDomConfig() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void normalizeDocument() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    // Node
++    public String getBaseURI() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public short compareDocumentPosition(Node other) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getTextContent() throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public void setTextContent(String textContent) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isSameNode(Node other) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupPrefix(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isDefaultNamespace(String namespaceURI) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String lookupNamespaceURI(String prefix) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public boolean isEqualNode(Node arg) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getFeature(String feature, String version) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object setUserData(String key, Object data, org.w3c.dom.UserDataHandler handler) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public Object getUserData(String key) {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
+ }
+ 
+--- axis-1.4-src/src/org/apache/axis/message/Text.java.orig	2005-08-20 21:49:29.000000000 +0100
++++ axis-1.4-src/src/org/apache/axis/message/Text.java	2013-08-06 17:33:38.120031238 +0100
+@@ -213,4 +213,16 @@
+         return ( textRep.getData() != null ? textRep.getData().hashCode() : 0 );
+     }
+ 
++    // Text
++    public boolean isElementContentWhitespace() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public String getWholeText() {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
++
++    public org.w3c.dom.Text replaceWholeText(String content) throws DOMException {
++        throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "");
++    }
+ }
