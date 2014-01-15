@@ -121,9 +121,9 @@ for f in $(find . -name "*.class"); do mv $f $f.no; done
 
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} .
 
-# %patch2 -b .orig
-%patch3 -p1 -b .orig
-%patch4 -p1 -b .orig
+# $patch2
+%patch3 -p1
+%patch4 -p1
 
 %build
 pushd lib
