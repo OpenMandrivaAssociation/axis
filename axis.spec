@@ -116,8 +116,8 @@ for f in $(find . -name "*.zip"); do mv $f $f.no; done
 #find . -name "*.class" -exec rm -f {} \;
 for f in $(find . -name "*.class"); do mv $f $f.no; done
 
-%patch0 -b .orig
-%patch1 -b .orig
+%patch0
+%patch1
 
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} .
 
