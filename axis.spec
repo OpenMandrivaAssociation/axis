@@ -6,7 +6,7 @@ Epoch:         0
 Summary:       SOAP implementation in Java
 License:       ASL 2.0
 
-URL:           http://ws.apache.org/axis/
+URL:           https://ws.apache.org/axis/
 Source0:       axis-1.4-src.tar.gz
 # svn export http://svn.apache.org/repos/asf/webservices/axis/branches/AXIS_1_4_FINAL/
 # Build only
